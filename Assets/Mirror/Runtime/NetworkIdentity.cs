@@ -1076,7 +1076,7 @@ namespace Mirror
             // check if unity object has been destroyed
             if (this == null)
             {
-                Debug.LogWarning($"{remoteCallType} [{functionIndex}] received for deleted object [netId={netId}]");
+                Debug.LogWarning($"{remoteCallType} [{functionHash}] received for deleted object [netId={netId}]");
                 return;
             }
 
@@ -1095,15 +1095,15 @@ namespace Mirror
             }
 
             NetworkBehaviour invokeComponent = NetworkBehaviours[componentIndex];
-            if (!RemoteProcedureCalls.Invoke(functionIndex, remoteCallType, reader, invokeComponent, senderConnection))
+            if (!RemoteProcedureCalls.Invoke(functionHash, remoteCallType, reader, invokeComponent, senderConnection))
             {
 #if UNITY_SERVER
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine($"Found no receiver for incoming {remoteCallType} [{functionIndex}] on {gameObject.name}, the server and client should have the same NetworkBehaviour instances[netId ={netId}] on conn {connectionToClient}.");
+                Console.WriteLine($"Found no receiver for incoming {remoteCallType} [{functionHash}] on {gameObject.name}, the server and client should have the same NetworkBehaviour instances[netId ={netId}] on conn {connectionToClient}.");
                 Console.ResetColor();
                 connectionToClient.Disconnect();
 #else
-                Debug.LogError($"Found no receiver for incoming {remoteCallType} [{functionIndex}] on {gameObject.name}, the server and client should have the same NetworkBehaviour instances [netId={netId}] on conn {connectionToClient}.");
+                Debug.LogError($"Found no receiver for incoming {remoteCallType} [{functionHash}] on {gameObject.name}, the server and client should have the same NetworkBehaviour instances [netId={netId}] on conn {connectionToClient}.");
                 return;
 #endif
             }
