@@ -37,13 +37,14 @@ namespace Mirror.RemoteCalls
         // IMPORTANT: cmd/rpc functions are identified via **HASHES**.
         //   an index would requires half the bandwidth, but introduces issues
         //   where static constructors are lazily called, so index order isn't
-        //   guaranteed:
+        //   guaranteed. keep hashes to avoid:
         //     https://github.com/vis2k/Mirror/pull/3135
         //     https://github.com/vis2k/Mirror/issues/3138
-        //   keep the 4 byte hash for stability!
-        static readonly Dictionary<int, Invoker> remoteCallDelegates = new Dictionary<int, Invoker>();
+        // BUT: 2 byte hash is enough if we check for collisions. that's what we
+        //      do for NetworkMessage as well.
+        static readonly Dictionary<ushort, Invoker> remoteCallDelegates = new Dictionary<ushort, Invoker>();
 
-        static bool CheckIfDelegateExists(Type componentType, RemoteCallType remoteCallType, RemoteCallDelegate func, int functionHash)
+        static bool CheckIfDelegateExists(Type componentType, RemoteCallType remoteCallType, RemoteCallDelegate func, ushort functionHash)
         {
             if (remoteCallDelegates.ContainsKey(functionHash))
             {
