@@ -100,7 +100,7 @@ namespace Mirror
                     return;
                 }
 
-                //Debug.Log($"ConnectionRecv {conn} msgType:{typeof(T)} content:{BitConverter.ToString(reader.buffer.Array, reader.buffer.Offset, reader.buffer.Count)}");
+                //Debug.Log($"NetworkMessageDelegate {conn} msgType:{typeof(T)} content:{BitConverter.ToString(reader.buffer.Array, reader.buffer.Offset, reader.buffer.Count)}");
 
                 // if it is a value type, just use default(T)
                 // otherwise allocate a new instance

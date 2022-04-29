@@ -117,6 +117,7 @@ namespace Mirror.RemoteCalls
                 invoker.componentType.IsInstanceOfType(component))
             {
                 // invoke function on this component
+                Debug.Log($"RemoteCalls Invoke {component.name} {invoker.function.GetMethodName()}");
                 invoker.function(component, reader, senderConnection);
                 return true;
             }
