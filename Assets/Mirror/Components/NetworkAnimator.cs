@@ -235,7 +235,9 @@ namespace Mirror
             // NOTE: there is no API to play a transition(?)
             if (stateHash != 0 && animator.enabled)
             {
+#if !UNITY_SERVER
                 animator.Play(stateHash, layerId, normalizedTime);
+#endif
             }
 
             animator.SetLayerWeight(layerId, weight);
