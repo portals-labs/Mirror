@@ -1,0 +1,16 @@
+{
+    "name": "MultiplexTransport",
+    "rootNamespace": "",
+    "references": [
+        "GUID:50c1ddd3924aed64e867fdbe12f811ef"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

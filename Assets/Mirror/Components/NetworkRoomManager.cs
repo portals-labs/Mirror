@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -22,11 +21,10 @@ namespace Mirror
         public struct PendingPlayer
         {
             public NetworkConnectionToClient conn;
-            public GameObject roomPlayer;
+            public GameObject                roomPlayer;
         }
 
         [Header("Room Settings")]
-
         [FormerlySerializedAs("m_ShowRoomGUI")]
         [SerializeField]
         [Tooltip("This flag controls whether the default UI is shown for the room")]
@@ -61,7 +59,6 @@ namespace Mirror
         public List<PendingPlayer> pendingPlayers = new List<PendingPlayer>();
 
         [Header("Diagnostics")]
-
         /// <summary>
         /// True when all players have submitted a Ready message
         /// </summary>
@@ -102,8 +99,7 @@ namespace Mirror
 
         public override void OnValidate()
         {
-            // always >= 0
-            maxConnections = Mathf.Max(maxConnections, 0);
+            base.OnValidate();
 
             // always <= maxConnections
             minPlayers = Mathf.Min(minPlayers, maxConnections);
@@ -120,8 +116,6 @@ namespace Mirror
                     Debug.LogError("RoomPlayer prefab must have a NetworkIdentity component.");
                 }
             }
-
-            base.OnValidate();
         }
 
         public void ReadyStatusChanged()
@@ -278,7 +272,7 @@ namespace Mirror
                 if (roomPlayer != null)
                     roomSlots.Remove(roomPlayer);
 
-                foreach (NetworkIdentity clientOwnedObject in conn.clientOwnedObjects)
+                foreach (NetworkIdentity clientOwnedObject in conn.owned)
                 {
                     roomPlayer = clientOwnedObject.GetComponent<NetworkRoomPlayer>();
                     if (roomPlayer != null)
@@ -658,12 +652,6 @@ namespace Mirror
         /// This is called on the client when the client is finished loading a new networked scene.
         /// </summary>
         public virtual void OnRoomClientSceneChanged() {}
-
-        /// <summary>
-        /// Called on the client when adding a player to the room fails.
-        /// <para>This could be because the room is full, or the connection is not allowed to have more players.</para>
-        /// </summary>
-        public virtual void OnRoomClientAddPlayerFailed() {}
 
         #endregion
 

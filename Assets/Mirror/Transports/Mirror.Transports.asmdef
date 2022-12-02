@@ -1,0 +1,18 @@
+{
+    "name": "Mirror.Transports",
+    "rootNamespace": "",
+    "references": [
+        "GUID:50c1ddd3924aed64e867fdbe12f811ef",
+        "GUID:0597acc578f661c4d9eb11478e663d2c",
+        "GUID:367170a02359dc04a8311dfe3b1c93a6"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": true,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
