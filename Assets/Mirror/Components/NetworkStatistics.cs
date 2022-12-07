@@ -50,13 +50,6 @@ namespace Mirror
         [HideInInspector] public int  serverSentPacketsPerSecond;
         [HideInInspector] public long serverSentBytesPerSecond;
 
-        void Awake()
-        {
-#if UNITY_SERVER
-            DestroyImmediate(this);
-#endif
-        }
-
         // NetworkManager sets Transport.active in Awake().
         // so let's hook into it in Start().
         void Start()

@@ -1004,7 +1004,7 @@ namespace Mirror
                 return;
             }
 
-            // Debug.Log($"OnCommandMessage for netId:{msg.netId} {msg.componentIndex} {msg.functionHash} conn:{conn}");
+            // Debug.Log($"OnCommandMessage for netId:{msg.netId} conn:{conn}");
 
             using (NetworkReaderPooled networkReader = NetworkReaderPool.Get(msg.payload))
                 identity.HandleRemoteCall(msg.componentIndex, msg.functionHash, RemoteCallType.Command, networkReader, conn);

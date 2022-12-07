@@ -2,7 +2,7 @@
     "name": "MiddlewareTransport",
     "rootNamespace": "",
     "references": [
-        "GUID:50c1ddd3924aed64e867fdbe12f811ef"
+        "GUID:30817c1a0e6d646d99c048fc403f5979"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
