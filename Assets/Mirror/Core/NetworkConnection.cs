@@ -10,11 +10,6 @@ namespace Mirror
     {
         public const int LocalConnectionId = 0;
 
-        /// <summary>NetworkIdentities that this connection can see</summary>
-        // DEPRECATED 2022-02-05
-        [Obsolete("Cast to NetworkConnectionToClient to access .observing")]
-        public HashSet<NetworkIdentity> observing => ((NetworkConnectionToClient)this).observing;
-
         /// <summary>Unique identifier for this connection that is assigned by the transport layer.</summary>
         // assigned by transport, this id is unique for every connection on server.
         // clients don't know their own id and they don't know other client's ids.

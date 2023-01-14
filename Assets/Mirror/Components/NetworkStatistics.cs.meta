@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/Mirror/Core/NetworkBehaviourSyncVar.cs.meta
+guid: bce35f01665315343990a2e79ccadfb2
+========
 guid: 6d7da4e566d24ea7b0e12178d934b648
+>>>>>>>> Portals:Assets/Mirror/Components/NetworkStatistics.cs.meta
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
