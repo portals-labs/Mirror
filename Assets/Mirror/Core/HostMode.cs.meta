@@ -1,9 +1,5 @@
 fileFormatVersion: 2
-<<<<<<<< HEAD:Assets/Mirror/Components/NetworkTransformReliable/NetworkTransformReliable.cs.meta
-guid: 8ff3ba0becae47b8b9381191598957c8
-========
 guid: d27175a08d5341fc97645b49ee533d5a
->>>>>>>> Portals:Assets/Mirror/Core/HostMode.cs.meta
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
