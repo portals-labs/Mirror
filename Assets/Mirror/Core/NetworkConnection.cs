@@ -36,10 +36,6 @@ namespace Mirror
         /// <summary>This connection's main object (usually the player object).</summary>
         public NetworkIdentity identity { get; internal set; }
 
-        // DEPRECATED 2022-02-05
-        [Obsolete("Cast to NetworkConnectionToClient to access .owned")]
-        public HashSet<NetworkIdentity> clientOwnedObjects => owned;
-
         /// <summary>All NetworkIdentities owned by this connection. Can be main player, pets, etc.</summary>
         // .owned is now valid both on server and on client.
         // IMPORTANT: this needs to be <NetworkIdentity>, not <uint netId>.
