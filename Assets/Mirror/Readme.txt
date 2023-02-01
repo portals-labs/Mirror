@@ -4,7 +4,7 @@ Mirror is a MMO Scale Networking library for Unity, used in uMMORPG, uSurvival a
 You must restart Unity after importing Mirror for the Components Menu to update!
 
 Requirements:
-    Unity 2019 / 2020 LTS
+    Unity 2019 / 2020 / 2021 / 2022 LTS Releases
     Runtime .Net 4.x (Project Settings > Player > Other Settings)
 
 Documentation:
