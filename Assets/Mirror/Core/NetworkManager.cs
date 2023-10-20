@@ -216,7 +216,7 @@ namespace Mirror
             // some transports might not be ready until Start.
             //
             // (tick rate is applied in StartServer!)
-#if UNITY_SERVER
+#if PORTALS_SERVER
             if (autoStartServerBuild)
             {
                 StartServer();
@@ -646,7 +646,7 @@ namespace Mirror
         // useful for headless benchmark clients.
         public virtual void ConfigureHeadlessFrameRate()
         {
-#if UNITY_SERVER
+#if PORTALS_SERVER
             Application.targetFrameRate = sendRate;
             // Debug.Log($"Server Tick Rate set to {Application.targetFrameRate} Hz.");
 #endif
