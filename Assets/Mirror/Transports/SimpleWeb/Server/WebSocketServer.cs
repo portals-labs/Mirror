@@ -80,6 +80,7 @@ namespace Mirror.SimpleWeb
                         //      this might not be a problem as HandshakeAndReceiveLoop checks for stop
                         //      and returns/disposes before sending message to queue
                         Connection conn = new Connection(client, AfterConnectionDisposed);
+                        // [SimpleWebTransport] A client connected [Conn:-1, endPoint:[::1]:62887]
                         Console.WriteLine($"[SimpleWebTransport] A client connected {conn}", false);
 
                         // handshake needs its own thread as it needs to wait for message from client
