@@ -324,14 +324,8 @@ namespace Mirror
             */
 
             // FAST VERSION: this shows in profiler a lot, so cache EVERYTHING!
-
-            //tf.GetPositionAndRotation(out Vector3 currentPosition, out Quaternion currentRotation); // faster than tf.position + tf.rotation
-
-            Vector3 currentPosition = Vector3.zero;
-            Quaternion currentRotation = Quaternion.identity;
-            Vector3 physicsPosition = Vector3.zero;
-            Quaternion physicsRotation = Quaternion.identity;
-            //predictedRigidbodyTransform.GetPositionAndRotation(out Vector3 physicsPosition, out Quaternion physicsRotation); // faster than Rigidbody .position and .rotation
+            tf.GetPositionAndRotation(out Vector3 currentPosition, out Quaternion currentRotation); // faster than tf.position + tf.rotation
+            predictedRigidbodyTransform.GetPositionAndRotation(out Vector3 physicsPosition, out Quaternion physicsRotation); // faster than Rigidbody .position and .rotation
             float deltaTime = Time.deltaTime;
 
             // slow and simple version:
@@ -539,9 +533,7 @@ namespace Mirror
             if (onlyRecordChanges)
             {
                 // TODO maybe don't reuse the correction thresholds?
-                //tf.GetPositionAndRotation(out Vector3 position, out Quaternion rotation);
-                Vector3 position = Vector3.zero;
-                Quaternion rotation = Quaternion.identity;
+                tf.GetPositionAndRotation(out Vector3 position, out Quaternion rotation);
                 // clean & simple:
                 // if (Vector3.Distance(lastRecorded.position, position) < positionCorrectionThreshold &&
                 //     Quaternion.Angle(lastRecorded.rotation, rotation) < rotationCorrectionThreshold)
@@ -590,12 +582,9 @@ namespace Mirror
 
             // grab current position/rotation/velocity only once.
             // this is performance critical, avoid calling .transform multiple times.
-            //tf.GetPositionAndRotation(out Vector3 currentPosition, out Quaternion currentRotation); // faster than accessing .position + .rotation manually
+            tf.GetPositionAndRotation(out Vector3 currentPosition, out Quaternion currentRotation); // faster than accessing .position + .rotation manually
             Vector3 currentVelocity = predictedRigidbody.velocity;
             Vector3 currentAngularVelocity = predictedRigidbody.angularVelocity;
-
-            Vector3 currentPosition = Vector3.zero;
-            Quaternion currentRotation = Quaternion.identity;
 
             // calculate delta to previous state (if any)
             Vector3 positionDelta = Vector3.zero;
@@ -742,10 +731,8 @@ namespace Mirror
 
             // performance: get Rigidbody position & rotation only once,
             // and together via its transform
-            // predictedRigidbodyTransform.GetPositionAndRotation(out Vector3 physicsPosition, out Quaternion physicsRotation);
+            predictedRigidbodyTransform.GetPositionAndRotation(out Vector3 physicsPosition, out Quaternion physicsRotation);
 
-            Vector3 physicsPosition = Vector3.zero;
-            Quaternion physicsRotation = Quaternion.identity;
             // OPTIONAL performance optimization when comparing idle objects.
             // even idle objects will have a history of ~32 entries.
             // sampling & traversing through them is unnecessarily costly.
@@ -895,11 +882,7 @@ namespace Mirror
 
 
             // FAST VERSION: this shows in profiler a lot, so cache EVERYTHING!
-            // tf.GetPositionAndRotation(out Vector3 position, out Quaternion rotation);  // faster than tf.position + tf.rotation. server's rigidbody is on the same transform.
-
-            Vector3 position = Vector3.zero;
-
-            Quaternion rotation = Quaternion.identity;
+            tf.GetPositionAndRotation(out Vector3 position, out Quaternion rotation);  // faster than tf.position + tf.rotation. server's rigidbody is on the same transform.
 
             // simple but slow write:
             // writer.WriteFloat(Time.deltaTime);
