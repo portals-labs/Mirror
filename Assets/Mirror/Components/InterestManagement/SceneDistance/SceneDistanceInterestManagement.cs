@@ -4,9 +4,33 @@ using UnityEngine.SceneManagement;
 
 namespace Mirror
 {
-    [AddComponentMenu("Network/ Interest Management/ Scene/Scene Interest Management")]
-    public class SceneInterestManagement : InterestManagement
+    [AddComponentMenu("Network/ Interest Management/ Scene/Scene Distance Interest Management")]
+    public class SceneDistanceInterestManagement : InterestManagement
     {
+        [Tooltip("The maximum range that objects will be visible at. Add DistanceInterestManagementCustomRange onto NetworkIdentities for custom ranges.")]
+        public int visRange = 500;
+
+        [Tooltip("Rebuild all every 'rebuildInterval' seconds.")]
+        public float rebuildInterval = 1;
+        double lastRebuildTime;
+
+        // cache custom ranges to avoid runtime TryGetComponent lookups
+        readonly Dictionary<NetworkIdentity, DistanceInterestManagementCustomRange> CustomRanges = new Dictionary<NetworkIdentity, DistanceInterestManagementCustomRange>();
+
+        // helper function to get vis range for a given object, or default.
+        [ServerCallback]
+        int GetVisRange(NetworkIdentity identity)
+        {
+            return CustomRanges.TryGetValue(identity, out DistanceInterestManagementCustomRange custom) ? custom.visRange : visRange;
+        }
+
+        [ServerCallback]
+        public override void ResetState()
+        {
+            lastRebuildTime = 0D;
+            CustomRanges.Clear();
+        }
+
         // Use Scene instead of string scene.name because when additively
         // loading multiples of a subscene the name won't be unique
         readonly Dictionary<Scene, HashSet<NetworkIdentity>> sceneObjects =
@@ -20,6 +44,9 @@ namespace Mirror
         [ServerCallback]
         public override void OnSpawned(NetworkIdentity identity)
         {
+            if (identity.TryGetComponent(out DistanceInterestManagementCustomRange custom))
+                CustomRanges[identity] = custom;
+
             Scene currentScene = identity.gameObject.scene;
             lastObjectScene[identity] = currentScene;
             // Debug.Log($"SceneInterestManagement.OnSpawned({identity.name}) currentScene: {currentScene}");
@@ -35,6 +62,8 @@ namespace Mirror
         [ServerCallback]
         public override void OnDestroyed(NetworkIdentity identity)
         {
+            CustomRanges.Remove(identity);
+
             // Don't RebuildSceneObservers here - that will happen in LateUpdate.
             // Multiple objects could be destroyed in same frame and we don't
             // want to rebuild for each one...let LateUpdate do it once.
@@ -54,6 +83,9 @@ namespace Mirror
             //   if scene changed:
             //     add previous to dirty
             //     add new to dirty
+            //   else
+            //     if rebuild interval reached:
+            //       rebuild all
             foreach (NetworkIdentity identity in NetworkServer.spawned.Values)
             {
                 if (!lastObjectScene.TryGetValue(identity, out Scene currentScene))
@@ -61,7 +93,16 @@ namespace Mirror
 
                 Scene newScene = identity.gameObject.scene;
                 if (newScene == currentScene)
+                {
+                    if (NetworkTime.localTime >= lastRebuildTime + rebuildInterval)
+                    {
+                        RebuildAll();
+                        lastRebuildTime = NetworkTime.localTime;
+                    }
+
+                    // no scene change, so we're done here
                     continue;
+                }
 
                 // Mark new/old scenes as dirty so they get rebuilt
                 dirtyScenes.Add(currentScene);
@@ -100,18 +141,38 @@ namespace Mirror
 
         public override bool OnCheckObserver(NetworkIdentity identity, NetworkConnectionToClient newObserver)
         {
-            return identity.gameObject.scene == newObserver.identity.gameObject.scene;
+            // Check for scene match first, then distance
+            if (identity.gameObject.scene != newObserver.identity.gameObject.scene) return false;
+
+            int range = GetVisRange(identity);
+            return Vector3.Distance(identity.transform.position, newObserver.identity.transform.position) < range;
         }
 
         public override void OnRebuildObservers(NetworkIdentity identity, HashSet<NetworkConnectionToClient> newObservers)
         {
+            // abort if no entry in sceneObjects yet (created in OnSpawned)
             if (!sceneObjects.TryGetValue(identity.gameObject.scene, out HashSet<NetworkIdentity> objects))
                 return;
 
-            // Add everything in the hashset for this object's current scene
+            int range = GetVisRange(identity);
+            Vector3 position = identity.transform.position;
+
+            // Add everything in the hashset for this object's current scene if within range
             foreach (NetworkIdentity networkIdentity in objects)
                 if (networkIdentity != null && networkIdentity.connectionToClient != null)
-                    newObservers.Add(networkIdentity.connectionToClient);
+                {
+                    // brute force distance check
+                    // -> only player connections can be observers, so it's enough if we
+                    //    go through all connections instead of all spawned identities.
+                    // -> compared to UNET's sphere cast checking, this one is orders of
+                    //    magnitude faster. if we have 10k monsters and run a sphere
+                    //    cast 10k times, we will see a noticeable lag even with physics
+                    //    layers. but checking to every connection is fast.
+                    NetworkConnectionToClient conn = networkIdentity.connectionToClient;
+                    if (conn != null && conn.isAuthenticated && conn.identity != null)
+                        if (Vector3.Distance(conn.identity.transform.position, position) < range)
+                            newObservers.Add(conn);
+                }
         }
     }
 }
