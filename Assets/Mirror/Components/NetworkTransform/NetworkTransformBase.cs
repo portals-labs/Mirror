@@ -72,24 +72,24 @@ namespace Mirror
         [SerializeField, Tooltip("Selectively syncs position, rotation, and scale.\nDo Not Change At Runtime!")]
         internal SyncInterpolateOptions synchronizationSelections = SyncInterpolateOptions.Default;
 
-        public bool syncPosition => (synchronizationSelections & SyncInterpolateOptions.Position) == SyncInterpolateOptions.Position;
-        public bool syncRotation => (synchronizationSelections & SyncInterpolateOptions.Rotation) == SyncInterpolateOptions.Rotation;
-        public bool syncScale => (synchronizationSelections & SyncInterpolateOptions.Scale) == SyncInterpolateOptions.Scale;
+        public bool syncPosition => synchronizationSelections.HasFlag(SyncInterpolateOptions.Position);
+        public bool syncRotation => synchronizationSelections.HasFlag(SyncInterpolateOptions.Rotation);
+        public bool syncScale => synchronizationSelections.HasFlag(SyncInterpolateOptions.Scale);
 
         // interpolation is on by default, but can be disabled to jump to
         // the destination immediately. some projects need this.
         [SerializeField, Tooltip("Interpolate smoothly between snapshots.\nDo Not Change At Runtime!")]
         internal SyncInterpolateOptions interpolationOptions = SyncInterpolateOptions.Default;
 
-        public bool interpolatePosition => (interpolationOptions & SyncInterpolateOptions.Position) == SyncInterpolateOptions.Position;
-        public bool interpolateRotation => (interpolationOptions & SyncInterpolateOptions.Rotation) == SyncInterpolateOptions.Rotation;
-        public bool interpolateScale => (interpolationOptions & SyncInterpolateOptions.Scale) == SyncInterpolateOptions.Scale;
+        public bool interpolatePosition => interpolationOptions.HasFlag(SyncInterpolateOptions.Position);
+        public bool interpolateRotation => interpolationOptions.HasFlag(SyncInterpolateOptions.Rotation);
+        public bool interpolateScale => interpolationOptions.HasFlag(SyncInterpolateOptions.Scale);
 
         [SerializeField, Tooltip("Settings for reducing bandwidth usage.\nDo Not Change At Runtime!")]
         internal BandwidthSavingsOptions bandwidthSavingsOptions = BandwidthSavingsOptions.Default;
 
-        public bool onlySyncOnChange => (bandwidthSavingsOptions & BandwidthSavingsOptions.OnlySyncOnChange) == BandwidthSavingsOptions.OnlySyncOnChange;
-        public bool compressRotation => (bandwidthSavingsOptions & BandwidthSavingsOptions.CompressRotation) == BandwidthSavingsOptions.CompressRotation;
+        public bool onlySyncOnChange => bandwidthSavingsOptions.HasFlag(BandwidthSavingsOptions.OnlySyncOnChange);
+        public bool compressRotation => bandwidthSavingsOptions.HasFlag(BandwidthSavingsOptions.CompressRotation);
 
         // CoordinateSpace ///////////////////////////////////////////////////////////
         [Tooltip("Local by default. World may be better when changing hierarchy, or non-NetworkTransforms root position/rotation/scale values.")]
